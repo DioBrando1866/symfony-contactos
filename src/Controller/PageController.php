@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
 final class PageController extends AbstractController
 {
     #[Route('/page', name: 'app_page')]
@@ -19,42 +20,86 @@ final class PageController extends AbstractController
         ]);
     }
 
-    #[Route('/', name: 'indice')]
-    public function indice(): Response
-    {
-        return $this->render('inicio.html.twig');
-    }
 
-    // Si queremos validar un parámetro, su usa 'requeriments' que es una expresión regular. En este caso, solo permite números de longitud variable
-
-    #[Route('/contacto/{codigo}', name: 'contacto', requirements: ['codigo' => '[0-9]+'])]
-
-    // Symfony inyecta la dependencia ManagerRegistry automáticamente
-
-    // Le pasa la variable $codigo con el valor en {codigo}. Si no se le pasa, coge 1 por defecto, en otro caso, daría not found
+    #[Route('/', name: 'indice', requirements: ['codigo' => '[0-9]+'])]
 
     public function ficha(ManagerRegistry $doctrine, int $codigo = 1): Response
     {
-
-        // La primera instrucción suele ser esta, ya que cogemos el repositorio de la entidad asociada
-
         $repositorio = $doctrine->getRepository(Contacto::class);
+        $contactos = $repositorio->findAll();
+        return $this->render('inicio.html.twig', [
+            'contactos' => $contactos
+        ]);
+    }
 
-        // Ahora usamos uno de los métodos del repositorio
+    #[Route('/contacto/nuevo/{nombre}/{telefono}/{email}', name: 'nuevo-con-datos')]
+    public function nuevoConDatos(
+        ManagerRegistry $doctrine,
+        Request $request,
+        string $nombre,
+        string $telefono,
+        string $email
+    ) {
+        $contacto = new Contacto();
 
-        $contacto = $repositorio->find($codigo);
+        $contacto->setNombre($nombre);
+        $contacto->setTelefono($telefono);
+        $contacto->setEmail($email);
 
-        // Y creamos la vista HTML
+        $entityManager = $doctrine->getManager();
+        $entityManager->persist($contacto);
+        $entityManager->flush();
+        return $this->redirectToRoute('indice');
+    }
 
-        $html = "
-        <h1>Detalle del contacto</h1>
-        <p>Nombre: " . $contacto->getNombre() . "</p>
-        <p>Teléfono: " . $contacto->getTelefono() . "</p>
-        <p>Email: " . $contacto->getEmail() . "</p>
-        ";
+    #[Route("/contacto/update/{codigo}/{nombre_nuevo}/{telefono_nuevo}/{email_nuevo}", name: "update")]
+    public function update(
+        ManagerRegistry $doctrine,
+        int $codigo,
+        string $nombre_nuevo,
+        string $telefono_nuevo,
+        string $email_nuevo
 
-        return new Response($html);
+    ) {
+        $contacto = $doctrine->getRepository(Contacto::class)->find($codigo);
+        if ($contacto) {
+            $contacto->setNombre($nombre_nuevo);
+            $contacto->setTelefono($telefono_nuevo);
+            $contacto->setEmail($email_nuevo);
+            $entityManager = $doctrine->getManager();
+            try {
+                $entityManager->persist($contacto);
+                $entityManager->flush();
+                return $this->redirectToRoute("indice");
+            } catch (\Exception $e) {
+                throw $this->createNotFoundException("Error al actualizar el contacto");
+            }
+        } else {
+            throw $this->createNotFoundException("No se ha encontrado el contacto");
+        }
+    }
 
+
+
+    #[Route("/contacto/borrar/{codigo}", name: "borrar")]
+    public function borrar(
+        ManagerRegistry $doctrine,
+        int $codigo
+    ) {
+        $contacto = $doctrine->getRepository(Contacto::class)->find($codigo);
+        if ($contacto) {
+            $entityManager = $doctrine->getManager();
+            try {
+                $entityManager->remove($contacto);
+                $entityManager->flush();
+                return $this->redirectToRoute("indice");
+
+            } catch (\Exception $e) {
+                throw $this->createNotFoundException("Error al borrar el contacto");
+            }
+        } else {
+            throw $this->createNotFoundException("No se ha encontrado el contacto");
+        }
     }
 }
 
