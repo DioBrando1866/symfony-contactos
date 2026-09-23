@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ContactoRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ContactoRepository::class)]
 class Contacto
@@ -17,9 +18,11 @@ class Contacto
     private ?string $nombre = null;
 
     #[ORM\Column(length: 15)]
+    #[Assert\Blank(message: "El teléfono no puede estar vacío")]
     private ?string $telefono = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Blank(message: "El email no puede estar vacío")]
     private ?string $email = null;
 
     public function getId(): ?int
