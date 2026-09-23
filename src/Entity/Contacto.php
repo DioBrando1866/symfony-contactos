@@ -25,6 +25,8 @@ class Contacto
     #[Assert\Blank(message: "El email no puede estar vacío")]
     private ?string $email = null;
 
+    #[ORM\ManyToOne(inversedBy: 'contactos')]
+    private ?Provincia $provincia = null;
     public function getId(): ?int
     {
         return $this->id;
@@ -62,6 +64,30 @@ class Contacto
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    public function getProvinciaContacto(): ?Provincia
+    {
+        return $this->provincia_contacto;
+    }
+
+    public function setProvinciaContacto(?Provincia $provincia_contacto): static
+    {
+        $this->provincia_contacto = $provincia_contacto;
+
+        return $this;
+    }
+
+    public function getProvincia(): ?Provincia
+    {
+        return $this->provincia;
+    }
+
+    public function setProvincia(?Provincia $provincia): static
+    {
+        $this->provincia = $provincia;
 
         return $this;
     }

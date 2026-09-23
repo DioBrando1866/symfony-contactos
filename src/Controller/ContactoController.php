@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Contacto;
+use App\Entity\Provincia;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

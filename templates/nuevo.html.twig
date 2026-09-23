@@ -3,5 +3,6 @@
 {% endblock %}
 {% block body %}
 <h1>Nuevo contacto</h1>
+{% form_theme formulario 'bootstrap_5_horizontal_layout.html.twig' %}
 {{ form(formulario) }}
 {% endblock %}
