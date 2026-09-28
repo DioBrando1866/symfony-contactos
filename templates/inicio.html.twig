@@ -10,15 +10,14 @@
 </div>
 
 
-<h2>Página de inicio</h2>
+<h2>Página de inicio - <a href="{{ path('nuevo-con-datos') }}">Nuevo contacto</a></h2>
 
 {% for contacto in contactos %}
-
-<a href="{{ path('contacto', {codigo: contacto.id}) }}">{{ contacto.nombre }}</a>
-<br>
+<ul>
+    <li><a href="{{ path('contacto', {codigo: contacto.id}) }}">{{ contacto.nombre }}</a></li>
+</ul>
 
 {% endfor %}
-<br>
-<a href="{{ path('nuevo-con-datos') }}">Nuevo contacto</a>
+
 
 {% endblock %}
