@@ -8,6 +8,9 @@
 
 <h1>Ficha del contacto</h1>
 {% include 'partials/_contacto.html.twig' with {'contacto': contacto}%}
+<a href="{{ path('editar', {'codigo': contacto.id}) }}">Editar</a><br>
+<a href="{{ path('borrar', {'codigo': contacto.id}) }}">Borrar</a><br>
+
 {%else%}
 <p>No se ha encontrado el contacto</p>
 {%endif%}

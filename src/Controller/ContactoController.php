@@ -30,6 +30,24 @@ final class ContactoController extends AbstractController
         return $this->render('nuevo.html.twig', array('formulario' => $formulario->createView()));
     }
 
+    #[Route('/contacto/{codigo}', name: "contacto")]
+    public function ficha(ManagerRegistry $doctrine, int $codigo = 1): Response
+    {
+        $repositorio = $doctrine->getRepository(Contacto::class);
+        $contacto = $repositorio->find($codigo);
+
+        if (!$contacto) {
+            throw $this->createNotFoundException("No se ha encontrado el contacto");
+        }
+
+        // Devolvemos una plantilla Twig en lugar de texto plano con HTML
+        return $this->render('contacto.html.twig', [
+            'contacto' => $contacto
+        ]);
+    }
+
+
+
     #[Route("/contacto/editar/{codigo}", name: "editar")]
     public function editar(ManagerRegistry $doctrine, Request $request, int $codigo)
     {

@@ -1,17 +1,24 @@
 {% extends 'base.html.twig' %}
-
 {% block body %}
 
 <h1>Contactos</h1>
 
 <h2>Bienvenido a la web de contactos.</h2>
 
-<p>Página de inicio</p>
+<div class="mb-3">
+    You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+</div>
+
+
+<h2>Página de inicio</h2>
 
 {% for contacto in contactos %}
 
-{{ include ('partials/_contacto.html.twig', {'contacto': contacto})}}
+<a href="{{ path('contacto', {codigo: contacto.id}) }}">{{ contacto.nombre }}</a>
+<br>
 
 {% endfor %}
+<br>
+<a href="{{ path('nuevo-con-datos') }}">Nuevo contacto</a>
 
 {% endblock %}
