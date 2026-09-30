@@ -37,6 +37,10 @@ security:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
         - { path: ^/$, roles: ROLE_USER }
+        - { path: ^/nuevo-con-datos, roles: ROLE_USER }
+        - { path: ^/contacto, roles: ROLE_USER }
+        - { path: ^/editar, roles: ROLE_USER }
+        - { path: ^/borrar, roles: ROLE_USER }
 
 when@test:
     security:
