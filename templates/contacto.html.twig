@@ -8,10 +8,14 @@
 
 <h1>Ficha del contacto</h1>
 {% include 'partials/_contacto.html.twig' with {'contacto': contacto}%}
-<a href="{{ path('editar', {'codigo': contacto.id}) }}">Editar</a><br>
-<a href="{{ path('borrar', {'codigo': contacto.id}) }}">Borrar</a><br>
+<button class="btn btn-primary"><a href="{{ path('editar', {'codigo': contacto.id}) }}"
+                style="color: white; text-decoration: none;">Editar</a></button>
+<button class="btn btn-primary"><a href="{{ path('borrar', {'codigo': contacto.id}) }}"
+                style="color: white; text-decoration: none;">Borrar</a></button>
 
 {%else%}
 <p>No se ha encontrado el contacto</p>
 {%endif%}
+<button class="btn btn-primary"><a href="{{ path('indice') }}" style="color: white; text-decoration: none;">Volver al
+                inicio</a></button>
 {% endblock %}
